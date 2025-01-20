@@ -1,66 +1,63 @@
-function formatDate() {
-  const input = document.getElementById('birthdate');
-  const value = input.value.replace(/\D/g, ''); // Удаляем всё, кроме цифр
-  const formattedValue = value
-    .replace(/^(\d{2})(\d{2})(\d{4})$/, '$1.$2.$3') // Автоматически добавляем точки
-    .substring(0, 10); // Ограничиваем длину
-  input.value = formattedValue;
-}
-
 function calculateMatrix() {
-  const input = document.getElementById('birthdate').value;
-  const resultDiv = document.getElementById('result');
+    const birthdateInput = document.getElementById("birthdate").value;
+    if (!/^\d{8}$/.test(birthdateInput)) {
+        alert("Введите дату рождения в формате ДДММГГГГ.");
+        return;
+    }
 
-  // Проверка формата даты
-  const regex = /^(\d{2})\.(\d{2})\.(\d{4})$/;
-  const match = input.match(regex);
+    const day = parseInt(birthdateInput.slice(0, 2));
+    const month = parseInt(birthdateInput.slice(2, 4));
+    const year = parseInt(birthdateInput.slice(4, 8));
 
-  if (!match) {
-    resultDiv.innerHTML = '<p style="color: red;">Введите дату в формате дд.мм.гггг</p>';
-    return;
-  }
+    // First additional number
+    const totalSum = [...birthdateInput].reduce((acc, digit) => acc + parseInt(digit), 0);
 
-  const [_, day, month, year] = match.map(Number);
+    // Additional numbers
+    const first = totalSum;
+    const second = [...String(first)].reduce((acc, digit) => acc + parseInt(digit), 0);
+    const third = Math.abs(first - 2 * day);
+    const fourth = [...String(third)].reduce((acc, digit) => acc + parseInt(digit), 0);
 
-  // Функция для суммы цифр
-  const sumDigits = (num) => num.toString().split('').reduce((a, b) => a + Number(b), 0);
+    // Destiny number
+    let destiny = second;
+    while (destiny > 9 && destiny !== 11) {
+        destiny = [...String(destiny)].reduce((acc, digit) => acc + parseInt(digit), 0);
+    }
 
-  // Расчёты
-  const PDC = sumDigits(day) + sumDigits(month) + sumDigits(year); // Первое доп. число
-  const SDC = sumDigits(PDC); // Второе доп. число
-  const TDC = PDC - 2 * (day.toString()[0] === '0' ? Number(day.toString()[1]) : Number(day.toString()[0])); // Третье доп. число
-  const FDC = sumDigits(Math.abs(TDC)); // Четвёртое доп. число
-  const destinyNumber = sumDigits(SDC) === 11 ? 11 : sumDigits(SDC); // Число судьбы
+    // Matrix
+    const matrix = {
+        "Характер": String(first).split('1').length - 1,
+        "Здоровье": String(first).split('4').length - 1,
+        "Удача": String(first).split('7').length - 1,
+        "Цель": String(first).split('3').length - 1,
+        "Энергия": String(first).split('2').length - 1,
+        "Логика": String(first).split('5').length - 1,
+        "Долг": String(first).split('8').length - 1,
+        "Семья": String(first).split('6').length - 1,
+        "Память": String(first).split('9').length - 1,
+    };
 
-  // Пример таблицы с результатами
-  resultDiv.innerHTML = `
-    <p><strong>Дата рождения:</strong> ${input}</p>
-    <table>
-      <tr>
-        <th>Доп. числа</th>
-        <td>${PDC}, ${SDC}, ${TDC}, ${FDC}</td>
-      </tr>
-      <tr>
-        <th>Число судьбы</th>
-        <td>${destinyNumber}</td>
-      </tr>
-      <tr>
-        <th>Характер</th>
-        <td>11</td>
-      </tr>
-      <tr>
-        <th>Здоровье</th>
-        <td>—</td>
-      </tr>
-      <tr>
-        <th>Удача</th>
-        <td>7</td>
-      </tr>
-      <tr>
-        <th>Энергия</th>
-        <td>2222</td>
-      </tr>
-      <!-- Добавьте свои расчёты сюда -->
-    </table>
-  `;
+    // External square
+    const externalSquare = {
+        "Темперамент": matrix["Энергия"] + matrix["Логика"] + matrix["Удача"],
+        "Цель": matrix["Характер"] + matrix["Здоровье"] + matrix["Удача"],
+        "Семья": matrix["Энергия"] + matrix["Логика"] + matrix["Долг"],
+        "Привычки": matrix["Энергия"] + matrix["Память"] + matrix["Логика"],
+        "Быт": matrix["Здоровье"] + matrix["Логика"] + matrix["Память"],
+    };
+
+    // Display results
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = `
+        <h3>Дополнительные числа</h3>
+        <p>Первое: ${first}, Второе: ${second}, Третье: ${third}, Четвертое: ${fourth}, Число судьбы: ${destiny}</p>
+        <h3>Матрица</h3>
+        <table>
+            ${Object.entries(matrix).map(([key, value]) => `<tr><td>${key}</td><td>${value}</td></tr>`).join('')}
+        </table>
+        <h3>Внешний квадрат</h3>
+        <table>
+            ${Object.entries(externalSquare).map(([key, value]) => `<tr><td>${key}</td><td>${value}</td></tr>`).join('')}
+        </table>
+    `;
 }
