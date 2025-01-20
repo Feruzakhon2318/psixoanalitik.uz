@@ -7,18 +7,17 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f5e4; /* ivory */
-            color: #3e4a33; /* olive */
+            background-color: #f8f5e4; /* Айвори */
+            color: #3e4a33; /* Оливковый */
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            height: 100vh;
         }
         h1 {
-            color: #3e4a33;
             margin-bottom: 20px;
         }
         .calculator {
@@ -26,14 +25,14 @@
             border: 2px solid #3e4a33;
             border-radius: 10px;
             padding: 20px;
-            max-width: 500px;
+            max-width: 400px;
             width: 100%;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         .calculator label {
             font-weight: bold;
-            margin-bottom: 10px;
             display: block;
+            margin-bottom: 10px;
         }
         .calculator input {
             width: 100%;
@@ -59,116 +58,38 @@
         .output {
             margin-top: 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 10px;
-            margin-top: 20px;
         }
-        .grid div {
-            border: 1px solid #3e4a33;
-            padding: 10px;
-            text-align: center;
+        .sector {
             background-color: #f8f5e4;
+            border: 1px solid #3e4a33;
             border-radius: 5px;
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
         }
-        .grid div.title {
-            font-weight: bold;
-            background-color: #3e4a33;
-            color: #ffffff;
+        .sector strong {
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
     <h1>Калькулятор Психоаналитика</h1>
     <div class="calculator">
-        <label for="birthdate">Введите вашу дату рождения (ДД.ММ.ГГГГ):</label>
+        <label for="birthdate">Введите дату рождения (ДД.ММ.ГГГГ):</label>
         <input type="text" id="birthdate" placeholder="23.02.1991">
         <button onclick="calculateNumerology()">Рассчитать</button>
         <div class="output" id="output"></div>
     </div>
-
-    <script>
-        function calculateNumerology() {
-            const birthdate = document.getElementById('birthdate').value;
-            const output = document.getElementById('output');
-
-            if (!/^\d{2}\.\d{2}\.\d{4}$/.test(birthdate)) {
-                output.innerHTML = "<p style='color: red;'>Неправильный формат. Используйте ДД.ММ.ГГГГ.</p>";
-                return;
-            }
-
-            const [day, month, year] = birthdate.split('.').map(Number);
-            const digits = [...birthdate.replace(/\./g, '')].map(Number);
-
-            // Дополнительные числа
-            const firstAdditional = digits.reduce((a, b) => a + b, 0);
-            const secondAdditional = [...firstAdditional.toString()].reduce((a, b) => +a + +b, 0);
-            const thirdAdditional = firstAdditional - 2 * (digits[0] || digits[1]);
-            const fourthAdditional = [...Math.abs(thirdAdditional).toString()].reduce((a, b) => +a + +b, 0);
-
-            // Число судьбы
-            const destinyNumber = secondAdditional >= 10 ? [...secondAdditional.toString()].reduce((a, b) => +a + +b, 0) : secondAdditional;
-
-            // Функция подсчета цифр
-            const countDigit = (num) => digits.concat([...firstAdditional.toString(), ...thirdAdditional.toString()]).filter((d) => +d === num).length;
-
-            // Расчеты для квадратов
-            const temperament = countDigit(3) + countDigit(5) + countDigit(7);
-            const character = countDigit(1);
-            const health = countDigit(4);
-            const luck = countDigit(7);
-            const target = character + health + luck;
-            const energy = countDigit(2);
-            const logic = countDigit(5);
-            const duty = countDigit(8);
-            const family = energy + logic + duty;
-            const interest = countDigit(3);
-            const work = countDigit(6);
-            const memory = countDigit(9);
-            const habits = interest + work + memory;
-            const life = health + logic + work;
-
-            output.innerHTML = `
-                <div class="grid">
-                    <div class="title">Доп. числа</div>
-                    <div>${firstAdditional}, ${secondAdditional}, ${thirdAdditional}, ${fourthAdditional}</div>
-                    <div class="title">Число судьбы</div>
-                    <div>${destinyNumber}</div>
-                    <div class="title">Темперамент</div>
-                    <div>${temperament}</div>
-                    <div class="title">Характер</div>
-                    <div>${character}</div>
-                    <div class="title">Здоровье</div>
-                    <div>${health || '-'}</div>
-                    <div class="title">Удача</div>
-                    <div>${luck || '-'}</div>
-                    <div class="title">Цель</div>
-                    <div>${target}</div>
-                    <div class="title">Энергия</div>
-                    <div>${energy || '-'}</div>
-                    <div class="title">Логика</div>
-                    <div>${logic || '-'}</div>
-                    <div class="title">Долг</div>
-                    <div>${duty || '-'}</div>
-                    <div class="title">Семья</div>
-                    <div>${family}</div>
-                    <div class="title">Интерес</div>
-                    <div>${interest || '-'}</div>
-                    <div class="title">Труд</div>
-                    <div>${work || '-'}</div>
-                    <div class="title">Память</div>
-                    <div>${memory || '-'}</div>
-                    <div class="title">Привычки</div>
-                    <div>${habits}</div>
-                    <div class="title">Быт</div>
-                    <div>${life}</div>
-                </div>
-            `;
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
+
