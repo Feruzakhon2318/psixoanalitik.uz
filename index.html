@@ -4,15 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Калькулятор Психоаналитика</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Основной стиль для страницы */
+        body {
+            font-family: "Georgia", serif;
+            background: #fafaf0; /* Цвет айвори */
+            margin: 0;
+            padding: 0;
+            color: #4A4A4A;
+        }
+
+        /* Стили для контейнера */
+        .calculator {
+            max-width: 450px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid #C5C5B4; /* Светлый оливковый */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #6B8E23; /* Оливковый */
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #C5C5B4;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input {
+            background: #F8F8F2;
+            color: #4A4A4A;
+        }
+
+        button {
+            background: #6B8E23;
+            color: #ffffff;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #556B2F;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background: #F8F8F2;
+        }
+
+        table th, table td {
+            border: 1px solid #C5C5B4;
+            text-align: center;
+            padding: 10px;
+        }
+
+        table th {
+            background: #6B8E23;
+            color: #ffffff;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="calculator">
         <h1>Калькулятор Психоаналитика</h1>
-        <input type="text" id="birthdate" placeholder="Введите дату рождения (ДД.ММ.ГГГГ)">
-        <button onclick="calculate()">Рассчитать</button>
+        <input type="text" id="birthdate" placeholder="Введите дату рождения (ДДММГГГГ)" />
+        <button onclick="calculateMatrix()">Рассчитать</button>
         <div id="result"></div>
     </div>
+
     <script src="calculator.js"></script>
 </body>
 </html>
