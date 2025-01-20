@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Калькулятор Матрицы Пифагора</title>
+  <title>Калькулятор Психоаналитика</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,7 +13,7 @@
       margin: 0;
     }
     .container {
-      max-width: 600px;
+      max-width: 800px;
       margin: 50px auto;
       padding: 20px;
       background: white;
@@ -35,11 +35,11 @@
       margin-bottom: 10px;
       border: 1px solid #ccc;
       border-radius: 5px;
+      font-size: 16px;
     }
     button {
       background-color: #4CAF50;
       color: white;
-      font-size: 16px;
       cursor: pointer;
     }
     button:hover {
@@ -51,13 +51,25 @@
       background: #f1f1f1;
       border-radius: 5px;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      text-align: center;
+      padding: 10px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Калькулятор Матрицы Пифагора</h1>
-    <label for="birthdate">Введите дату рождения (дд.мм.гггг):</label>
-    <input type="text" id="birthdate" placeholder="Например: 14.05.1984">
+    <h1>Калькулятор Психоаналитика</h1>
+    <label for="birthdate">Введите дату рождения:</label>
+    <input type="text" id="birthdate" maxlength="10" placeholder="Например: 23021991" oninput="formatDate()">
     <button onclick="calculateMatrix()">Рассчитать</button>
     <div id="result" class="result"></div>
   </div>
