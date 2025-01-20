@@ -2,7 +2,7 @@ function calculate() {
     const birthdate = document.getElementById('birthdate').value;
     const output = document.getElementById('output');
 
-    // Validate date format
+    // Проверка формата даты
     if (!/^\d{2}\.\d{2}\.\d{4}$/.test(birthdate)) {
         output.innerHTML = "<div class='cell'>Неверный формат даты. Используйте ДД.ММ.ГГГГ.</div>";
         return;
@@ -11,7 +11,7 @@ function calculate() {
     const [day, month, year] = birthdate.split('.').map(Number);
     const digits = [...birthdate.replace(/\./g, '')].map(Number);
 
-    // Additional Numbers
+    // Дополнительные числа
     const firstAdditional = digits.reduce((a, b) => a + b, 0);
     const secondAdditional = [...firstAdditional.toString()].reduce((a, b) => +a + +b, 0);
     const thirdAdditional = firstAdditional - 2 * (digits[0] || digits[1]);
@@ -21,10 +21,10 @@ function calculate() {
         ? [...secondAdditional.toString()].reduce((a, b) => +a + +b, 0)
         : secondAdditional;
 
-    // Helper to count digits
+    // Вспомогательная функция для подсчёта цифр
     const countDigit = (num) => digits.filter((d) => d === num).length;
 
-    // Matrix Calculations
+    // Расчёты для матрицы
     const temperament = countDigit(3) + countDigit(5) + countDigit(7);
     const target = countDigit(1) + countDigit(4) + countDigit(7);
     const family = countDigit(2) + countDigit(5) + countDigit(8);
@@ -41,7 +41,7 @@ function calculate() {
     const work = countDigit(6);
     const memory = countDigit(9);
 
-    // Display Results
+    // Вывод результата
     output.innerHTML = `
         <div class="cell">Доп. числа<br>${firstAdditional}, ${secondAdditional}, ${thirdAdditional}, ${fourthAdditional}</div>
         <div class="cell">Число Судьбы<br>${destinyNumber}</div>
