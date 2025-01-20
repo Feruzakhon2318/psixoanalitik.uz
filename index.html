@@ -7,33 +7,26 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f8f5e4; /* ivory */
-            color: #3e4a33; /* olive */
+            background-color: #f8f5e4; /* Ivory */
+            color: #3e4a33; /* Olive */
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+            padding: 20px;
         }
+
         h1 {
+            text-align: center;
             color: #3e4a33;
         }
+
         .calculator {
-            background-color: #ffffff;
+            max-width: 500px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 20px;
             border: 2px solid #3e4a33;
             border-radius: 10px;
-            padding: 20px;
-            max-width: 600px;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-        .calculator label {
-            font-weight: bold;
-            margin-bottom: 10px;
-            display: block;
-        }
+
         .calculator input {
             width: 100%;
             padding: 10px;
@@ -42,6 +35,7 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
+
         .calculator button {
             width: 100%;
             padding: 10px;
@@ -52,27 +46,31 @@
             font-size: 16px;
             cursor: pointer;
         }
+
         .calculator button:hover {
             background-color: #2e3a25;
         }
+
         .output {
             margin-top: 20px;
         }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-top: 20px;
         }
-        .grid div {
+
+        .cell {
+            text-align: center;
             padding: 10px;
+            background-color: #f8f5e4;
             border: 1px solid #3e4a33;
             border-radius: 5px;
-            text-align: center;
         }
-        .grid-title {
-            grid-column: span 3;
-            text-align: center;
+
+        .cell-header {
             font-weight: bold;
         }
     </style>
@@ -80,15 +78,74 @@
 <body>
     <h1>Калькулятор Психоаналитика</h1>
     <div class="calculator">
-        <label for="birthdate">Введите вашу дату рождения (DD.MM.YYYY):</label>
-        <input type="text" id="birthdate" placeholder="23.02.1991">
-        <button onclick="calculateNumerology()">Рассчитать</button>
-        <div class="output" id="output">
-            <div class="grid" id="first-square"></div>
-            <div class="grid" id="second-square"></div>
-        </div>
+        <input type="text" id="birthdate" placeholder="Введите дату рождения (ДД.ММ.ГГГГ)">
+        <button onclick="calculate()">Рассчитать</button>
+        <div class="output" id="output"></div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        function calculate() {
+            const birthdate = document.getElementById('birthdate').value.trim();
+            const output = document.getElementById('output');
+            output.innerHTML = '';
+
+            if (!/^\d{2}\.\d{2}\.\d{4}$/.test(birthdate)) {
+                output.innerHTML = '<p>Пожалуйста, введите дату в формате ДД.ММ.ГГГГ.</p>';
+                return;
+            }
+
+            const [day, month, year] = birthdate.split('.').map(Number);
+            const digits = [...birthdate.replace(/\./g, '')].map(Number);
+
+            // Расчёт дополнительных чисел
+            const firstAdditional = digits.reduce((a, b) => a + b, 0);
+            const secondAdditional = [...firstAdditional.toString()].reduce((a, b) => +a + +b, 0);
+            const thirdAdditional = firstAdditional - 2 * (digits[0] || digits[1]);
+            const fourthAdditional = [...Math.abs(thirdAdditional).toString()].reduce((a, b) => +a + +b, 0);
+            const destinyNumber = secondAdditional >= 10 ? [...secondAdditional.toString()].reduce((a, b) => +a + +b, 0) : secondAdditional;
+
+            // Подсчёт количества цифр для каждого сектора
+            const countDigits = (num) => digits.filter((d) => d === num).length;
+            const temperament = countDigits(3) + countDigits(5) + countDigits(7);
+            const target = countDigits(1) + countDigits(4) + countDigits(7);
+            const family = countDigits(2) + countDigits(5) + countDigits(8);
+            const habits = countDigits(3) + countDigits(6) + countDigits(9);
+            const life = countDigits(4) + countDigits(5) + countDigits(6);
+
+            const character = countDigits(1);
+            const health = countDigits(4);
+            const luck = countDigits(7);
+            const energy = countDigits(2);
+            const logic = countDigits(5);
+            const duty = countDigits(8);
+            const interest = countDigits(3);
+            const work = countDigits(6);
+            const memory = countDigits(9);
+
+            // Отображение в двух квадратах
+            output.innerHTML = `
+                <div class="grid">
+                    <div class="cell"><span class="cell-header">Доп. числа</span><br>${firstAdditional}, ${secondAdditional}, ${thirdAdditional}, ${fourthAdditional}</div>
+                    <div class="cell"><span class="cell-header">Число Судьбы</span><br>${destinyNumber}</div>
+                    <div class="cell"><span class="cell-header">Темперамент</span><br>${temperament}</div>
+                    <div class="cell"><span class="cell-header">Цель</span><br>${target}</div>
+                    <div class="cell"><span class="cell-header">Семья</span><br>${family}</div>
+                    <div class="cell"><span class="cell-header">Привычки</span><br>${habits}</div>
+                    <div class="cell"><span class="cell-header">Быт</span><br>${life}</div>
+                </div>
+                <div class="grid">
+                    <div class="cell"><span class="cell-header">Характер</span><br>${character}</div>
+                    <div class="cell"><span class="cell-header">Здоровье</span><br>${health}</div>
+                    <div class="cell"><span class="cell-header">Удача</span><br>${luck}</div>
+                    <div class="cell"><span class="cell-header">Энергия</span><br>${energy}</div>
+                    <div class="cell"><span class="cell-header">Логика</span><br>${logic}</div>
+                    <div class="cell"><span class="cell-header">Долг</span><br>${duty || '-'}</div>
+                    <div class="cell"><span class="cell-header">Интерес</span><br>${interest}</div>
+                    <div class="cell"><span class="cell-header">Труд</span><br>${work || '-'}</div>
+                    <div class="cell"><span class="cell-header">Память</span><br>${memory}</div>
+                </div>
+            `;
+        }
+    </script>
 </body>
 </html>
