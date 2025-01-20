@@ -1,72 +1,132 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор Психоаналитика</title>
+    <title>Numerology Calculator</title>
     <style>
         body {
-            font-family: "Arial", sans-serif;
-            background-color: #F5F5E9; /* айвори */
-            color: #556B2F; /* оливковый */
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f5e4; /* ivory */
+            color: #3e4a33; /* olive */
             margin: 0;
             padding: 0;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
         h1 {
-            font-size: 24px;
-            color: #556B2F; /* оливковый */
+            color: #3e4a33;
         }
-        input[type="text"] {
-            width: 80%;
+        .calculator {
+            background-color: #ffffff;
+            border: 2px solid #3e4a33;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .calculator label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .calculator input {
+            width: 100%;
             padding: 10px;
-            margin: 20px 0;
-            border: 1px solid #556B2F;
+            margin-bottom: 20px;
+            border: 1px solid #3e4a33;
             border-radius: 5px;
-            font-size: 16px;
+            box-sizing: border-box;
         }
-        button {
-            background-color: #556B2F; /* оливковый */
-            color: #F5F5E9; /* айвори */
+        .calculator button {
+            width: 100%;
+            padding: 10px;
+            background-color: #3e4a33;
+            color: #ffffff;
             border: none;
-            padding: 10px 20px;
-            font-size: 16px;
             border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #6B8E23; /* светлее оливкового */
+        .calculator button:hover {
+            background-color: #2e3a25;
         }
         .output {
             margin-top: 20px;
-            text-align: left;
-        }
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid #556B2F;
-        }
-        th, td {
             padding: 10px;
-            text-align: center;
+            background-color: #f8f5e4;
+            border: 1px solid #3e4a33;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Калькулятор Психоаналитика</h1>
-        <input type="text" id="birthdate" placeholder="Введите дату рождения (ДД.ММ.ГГГГ)">
-        <button id="calculate">Рассчитать</button>
+    <h1>Numerology Calculator</h1>
+    <div class="calculator">
+        <label for="birthdate">Enter your birthdate (DD.MM.YYYY):</label>
+        <input type="text" id="birthdate" placeholder="23.02.1991">
+        <button onclick="calculateNumerology()">Calculate</button>
         <div class="output" id="output"></div>
     </div>
-    <script src="calculator.js"></script>
+
+    <script>
+        function calculateNumerology() {
+            const birthdate = document.getElementById('birthdate').value;
+            const output = document.getElementById('output');
+
+            if (!/^\d{2}\.\d{2}\.\d{4}$/.test(birthdate)) {
+                output.innerText = "Invalid format. Please use DD.MM.YYYY.";
+                return;
+            }
+
+            const [day, month, year] = birthdate.split('.').map(Number);
+            const digits = [...birthdate.replace(/\./g, '')].map(Number);
+
+            const sum = digits.reduce((a, b) => a + b, 0);
+            const second = [...sum.toString()].reduce((a, b) => +a + +b, 0);
+            const third = sum - 2 * digits[0];
+            const fourth = [...third.toString()].reduce((a, b) => +a + +b, 0);
+            const destiny = second >= 10 ? [...second.toString()].reduce((a, b) => +a + +b, 0) : second;
+
+            const countDigit = (num) => digits.filter((d) => d === num).length;
+            const temperament = countDigit(3) + countDigit(5) + countDigit(7);
+            const character = countDigit(1);
+            const health = countDigit(4);
+            const luck = countDigit(7);
+            const target = character + health + luck;
+            const energy = countDigit(2);
+            const logic = countDigit(5);
+            const duty = countDigit(8);
+            const family = energy + logic + duty;
+            const interest = countDigit(3);
+            const work = countDigit(6);
+            const memory = countDigit(9);
+            const habits = interest + work + memory;
+            const life = health + logic + work;
+
+            output.innerHTML = `
+                <strong>Additional Numbers:</strong> ${sum}, ${second}, ${third}, ${fourth}<br>
+                <strong>Destiny Number:</strong> ${destiny}<br>
+                <strong>Temperament:</strong> ${temperament}<br>
+                <strong>Character:</strong> ${character}<br>
+                <strong>Health:</strong> ${health}<br>
+                <strong>Luck:</strong> ${luck}<br>
+                <strong>Target:</strong> ${target}<br>
+                <strong>Energy:</strong> ${energy}<br>
+                <strong>Logic:</strong> ${logic}<br>
+                <strong>Duty:</strong> ${duty}<br>
+                <strong>Family:</strong> ${family}<br>
+                <strong>Interest:</strong> ${interest}<br>
+                <strong>Work:</strong> ${work}<br>
+                <strong>Memory:</strong> ${memory}<br>
+                <strong>Habits:</strong> ${habits}<br>
+                <strong>Life:</strong> ${life}<br>
+            `;
+        }
+    </script>
 </body>
 </html>
