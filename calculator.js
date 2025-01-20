@@ -1,3 +1,12 @@
+function formatDate() {
+  const input = document.getElementById('birthdate');
+  const value = input.value.replace(/\D/g, ''); // Удаляем всё, кроме цифр
+  const formattedValue = value
+    .replace(/^(\d{2})(\d{2})(\d{4})$/, '$1.$2.$3') // Автоматически добавляем точки
+    .substring(0, 10); // Ограничиваем длину
+  input.value = formattedValue;
+}
+
 function calculateMatrix() {
   const input = document.getElementById('birthdate').value;
   const resultDiv = document.getElementById('result');
@@ -23,13 +32,35 @@ function calculateMatrix() {
   const FDC = sumDigits(Math.abs(TDC)); // Четвёртое доп. число
   const destinyNumber = sumDigits(SDC) === 11 ? 11 : sumDigits(SDC); // Число судьбы
 
-  // Результаты
+  // Пример таблицы с результатами
   resultDiv.innerHTML = `
     <p><strong>Дата рождения:</strong> ${input}</p>
-    <p><strong>Первое доп. число:</strong> ${PDC}</p>
-    <p><strong>Второе доп. число:</strong> ${SDC}</p>
-    <p><strong>Третье доп. число:</strong> ${TDC}</p>
-    <p><strong>Четвёртое доп. число:</strong> ${FDC}</p>
-    <p><strong>Число судьбы:</strong> ${destinyNumber}</p>
+    <table>
+      <tr>
+        <th>Доп. числа</th>
+        <td>${PDC}, ${SDC}, ${TDC}, ${FDC}</td>
+      </tr>
+      <tr>
+        <th>Число судьбы</th>
+        <td>${destinyNumber}</td>
+      </tr>
+      <tr>
+        <th>Характер</th>
+        <td>11</td>
+      </tr>
+      <tr>
+        <th>Здоровье</th>
+        <td>—</td>
+      </tr>
+      <tr>
+        <th>Удача</th>
+        <td>7</td>
+      </tr>
+      <tr>
+        <th>Энергия</th>
+        <td>2222</td>
+      </tr>
+      <!-- Добавьте свои расчёты сюда -->
+    </table>
   `;
 }
