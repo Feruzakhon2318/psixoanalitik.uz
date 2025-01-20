@@ -1,30 +1,34 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Калькулятор Психоаналитика</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f5e4;
-            color: #3e4a33;
+            font-family: Arial, sans-serif;
+            background-color: #f8f5e4; /* ivory */
+            color: #3e4a33; /* olive */
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
         h1 {
-            text-align: center;
+            margin-bottom: 20px;
         }
         .calculator {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
             background-color: #ffffff;
             border: 2px solid #3e4a33;
             border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         .calculator input {
-            width: 100%;
+            width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #3e4a33;
@@ -34,110 +38,37 @@
             width: 100%;
             padding: 10px;
             background-color: #3e4a33;
-            color: white;
+            color: #ffffff;
             border: none;
             border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
         }
+        .calculator button:hover {
+            background-color: #2e3a25;
+        }
         .output {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
             margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
         }
-        .output div {
-            padding: 10px;
-            border: 1px solid #3e4a33;
+        .cell {
             background-color: #f8f5e4;
-            text-align: center;
+            border: 1px solid #3e4a33;
             border-radius: 5px;
-        }
-        .header {
-            font-weight: bold;
-            margin-bottom: 5px;
+            padding: 10px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <h1>Калькулятор Психоаналитика</h1>
     <div class="calculator">
-        <input type="text" id="birthdate" placeholder="Введите дату рождения (дд.мм.гггг)">
+        <input type="text" id="birthdate" placeholder="Введите дату (ДД.ММ.ГГГГ)">
         <button onclick="calculate()">Рассчитать</button>
-        <div id="result" class="output"></div>
+        <div class="output" id="output"></div>
     </div>
-    <script>
-        function calculate() {
-            const birthdate = document.getElementById('birthdate').value;
-            const result = document.getElementById('result');
-            result.innerHTML = ''; // Очистить предыдущий результат
-
-            if (!/^\d{2}\.\d{2}\.\d{4}$/.test(birthdate)) {
-                result.innerHTML = '<div>Введите дату в формате дд.мм.гггг</div>';
-                return;
-            }
-
-            const [day, month, year] = birthdate.split('.').map(Number);
-            const digits = [...birthdate.replace(/\D/g, '')].map(Number);
-
-            // Дополнительные числа
-            const first = digits.reduce((sum, digit) => sum + digit, 0);
-            const second = [...String(first)].reduce((sum, digit) => sum + Number(digit), 0);
-            const third = first - 2 * (digits[0] || digits[1]);
-            const fourth = [...String(Math.abs(third))].reduce((sum, digit) => sum + Number(digit), 0);
-            const destiny = second >= 10 ? [...String(second)].reduce((sum, digit) => sum + Number(digit), 0) : second;
-
-            // Функция подсчета чисел в массиве
-            const countDigits = (digit) => digits.concat(
-                [...String(first)], 
-                [...String(second)], 
-                [...String(third)], 
-                [...String(fourth)]
-            ).filter(d => +d === digit).length;
-
-            // Значения первого квадрата
-            const temperament = countDigits(3) + countDigits(5) + countDigits(7);
-            const target = countDigits(1) + countDigits(4) + countDigits(7);
-            const family = countDigits(2) + countDigits(5) + countDigits(8);
-            const habits = countDigits(3) + countDigits(6) + countDigits(9);
-            const life = countDigits(4) + countDigits(5) + countDigits(6);
-
-            // Значения второго квадрата
-            const character = countDigits(1);
-            const health = countDigits(4) || '-';
-            const luck = countDigits(7) || '-';
-            const energy = countDigits(2);
-            const logic = countDigits(5) || '-';
-            const duty = countDigits(8) || '-';
-            const interest = countDigits(3);
-            const work = countDigits(6) || '-';
-            const memory = countDigits(9);
-
-            // Формируем вывод
-            const firstSquare = `
-                <div><div class="header">Доп. числа</div>${first}, ${second}, ${third}, ${fourth}</div>
-                <div><div class="header">Число Судьбы</div>${destiny}</div>
-                <div><div class="header">Темперамент</div>${temperament}</div>
-                <div><div class="header">Цель</div>${target}</div>
-                <div><div class="header">Семья</div>${family}</div>
-                <div><div class="header">Привычки</div>${habits}</div>
-                <div><div class="header">Быт</div>${life}</div>
-            `;
-
-            const secondSquare = `
-                <div><div class="header">Характер</div>${character}</div>
-                <div><div class="header">Здоровье</div>${health}</div>
-                <div><div class="header">Удача</div>${luck}</div>
-                <div><div class="header">Энергия</div>${energy}</div>
-                <div><div class="header">Логика</div>${logic}</div>
-                <div><div class="header">Долг</div>${duty}</div>
-                <div><div class="header">Интерес</div>${interest}</div>
-                <div><div class="header">Труд</div>${work}</div>
-                <div><div class="header">Память</div>${memory}</div>
-            `;
-
-            result.innerHTML = firstSquare + secondSquare;
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
-
