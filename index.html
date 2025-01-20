@@ -1,44 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Numerology Calculator</title>
+    <title>Калькулятор Психоаналитика</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f8f5e4; /* ivory */
             color: #3e4a33; /* olive */
             margin: 0;
-            padding: 20px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
         }
-
         h1 {
+            color: #3e4a33;
             margin-bottom: 20px;
         }
-
         .calculator {
             background-color: #ffffff;
             border: 2px solid #3e4a33;
             border-radius: 10px;
             padding: 20px;
-            max-width: 400px;
+            max-width: 500px;
             width: 100%;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-
-        label {
+        .calculator label {
             font-weight: bold;
             margin-bottom: 10px;
             display: block;
         }
-
-        input {
+        .calculator input {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -46,8 +43,7 @@
             border-radius: 5px;
             box-sizing: border-box;
         }
-
-        button {
+        .calculator button {
             width: 100%;
             padding: 10px;
             background-color: #3e4a33;
@@ -57,118 +53,119 @@
             font-size: 16px;
             cursor: pointer;
         }
-
-        button:hover {
+        .calculator button:hover {
             background-color: #2e3a25;
         }
-
         .output {
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        .matrix {
-            width: 100%;
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             margin-top: 20px;
-            border-collapse: collapse;
         }
-
-        .matrix td {
+        .grid div {
             border: 1px solid #3e4a33;
             padding: 10px;
             text-align: center;
+            background-color: #f8f5e4;
+            border-radius: 5px;
         }
-
-        .numerology-grid .row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
+        .grid div.title {
+            font-weight: bold;
+            background-color: #3e4a33;
+            color: #ffffff;
         }
     </style>
 </head>
 <body>
-    <h1>Numerology Calculator</h1>
+    <h1>Калькулятор Психоаналитика</h1>
     <div class="calculator">
-        <label for="birthdate">Enter your birthdate (DD.MM.YYYY):</label>
+        <label for="birthdate">Введите вашу дату рождения (ДД.ММ.ГГГГ):</label>
         <input type="text" id="birthdate" placeholder="23.02.1991">
-        <button onclick="calculateNumerology()">Calculate</button>
+        <button onclick="calculateNumerology()">Рассчитать</button>
         <div class="output" id="output"></div>
     </div>
+
     <script>
         function calculateNumerology() {
             const birthdate = document.getElementById('birthdate').value;
             const output = document.getElementById('output');
 
             if (!/^\d{2}\.\d{2}\.\d{4}$/.test(birthdate)) {
-                output.innerText = "Invalid format. Please use DD.MM.YYYY.";
+                output.innerHTML = "<p style='color: red;'>Неправильный формат. Используйте ДД.ММ.ГГГГ.</p>";
                 return;
             }
 
             const [day, month, year] = birthdate.split('.').map(Number);
             const digits = [...birthdate.replace(/\./g, '')].map(Number);
 
-            // Calculate additional numbers
+            // Дополнительные числа
             const firstAdditional = digits.reduce((a, b) => a + b, 0);
             const secondAdditional = [...firstAdditional.toString()].reduce((a, b) => +a + +b, 0);
             const thirdAdditional = firstAdditional - 2 * (digits[0] || digits[1]);
             const fourthAdditional = [...Math.abs(thirdAdditional).toString()].reduce((a, b) => +a + +b, 0);
 
-            // Destiny number
+            // Число судьбы
             const destinyNumber = secondAdditional >= 10 ? [...secondAdditional.toString()].reduce((a, b) => +a + +b, 0) : secondAdditional;
 
-            // Helper function to count specific digits
-            const countDigits = (digit) => [...digits, ...firstAdditional.toString(), ...secondAdditional.toString(), ...thirdAdditional.toString(), ...fourthAdditional.toString()]
-                .filter((d) => +d === digit).length;
+            // Функция подсчета цифр
+            const countDigit = (num) => digits.concat([...firstAdditional.toString(), ...thirdAdditional.toString()]).filter((d) => +d === num).length;
 
-            // Calculations for the matrix
-            const temperament = countDigits(3) + countDigits(5) + countDigits(7);
-            const character = countDigits(1);
-            const health = countDigits(4);
-            const luck = countDigits(7);
+            // Расчеты для квадратов
+            const temperament = countDigit(3) + countDigit(5) + countDigit(7);
+            const character = countDigit(1);
+            const health = countDigit(4);
+            const luck = countDigit(7);
             const target = character + health + luck;
-            const energy = countDigits(2);
-            const logic = countDigits(5);
-            const duty = countDigits(8) || '-';
-            const family = energy + logic + (duty !== '-' ? duty : 0);
-            const interest = countDigits(3);
-            const work = countDigits(6) || '-';
-            const memory = countDigits(9);
-            const habits = interest + (work !== '-' ? work : 0) + memory;
-            const life = health + logic + (work !== '-' ? work : 0);
+            const energy = countDigit(2);
+            const logic = countDigit(5);
+            const duty = countDigit(8);
+            const family = energy + logic + duty;
+            const interest = countDigit(3);
+            const work = countDigit(6);
+            const memory = countDigit(9);
+            const habits = interest + work + memory;
+            const life = health + logic + work;
 
-            // Output the results
             output.innerHTML = `
-                <div class="numerology-grid">
-                    <div class="row">
-                        <div class="cell">Доп. числа:</div>
-                        <div class="cell">${firstAdditional}, ${secondAdditional}, ${thirdAdditional}, ${fourthAdditional}</div>
-                    </div>
-                    <div class="row">
-                        <div class="cell">Число судьбы:</div>
-                        <div class="cell">${destinyNumber}</div>
-                    </div>
-                    <table class="matrix">
-                        <tr>
-                            <td>${character || '-'}</td>
-                            <td>${health || '-'}</td>
-                            <td>${luck || '-'}</td>
-                            <td>${target || '-'}</td>
-                        </tr>
-                        <tr>
-                            <td>${energy || '-'}</td>
-                            <td>${logic || '-'}</td>
-                            <td>${duty}</td>
-                            <td>${family || '-'}</td>
-                        </tr>
-                        <tr>
-                            <td>${interest || '-'}</td>
-                            <td>${work}</td>
-                            <td>${memory || '-'}</td>
-                            <td>${habits || '-'}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="4">Быт: ${life || '-'}</td>
-                        </tr>
-                    </table>
+                <div class="grid">
+                    <div class="title">Доп. числа</div>
+                    <div>${firstAdditional}, ${secondAdditional}, ${thirdAdditional}, ${fourthAdditional}</div>
+                    <div class="title">Число судьбы</div>
+                    <div>${destinyNumber}</div>
+                    <div class="title">Темперамент</div>
+                    <div>${temperament}</div>
+                    <div class="title">Характер</div>
+                    <div>${character}</div>
+                    <div class="title">Здоровье</div>
+                    <div>${health || '-'}</div>
+                    <div class="title">Удача</div>
+                    <div>${luck || '-'}</div>
+                    <div class="title">Цель</div>
+                    <div>${target}</div>
+                    <div class="title">Энергия</div>
+                    <div>${energy || '-'}</div>
+                    <div class="title">Логика</div>
+                    <div>${logic || '-'}</div>
+                    <div class="title">Долг</div>
+                    <div>${duty || '-'}</div>
+                    <div class="title">Семья</div>
+                    <div>${family}</div>
+                    <div class="title">Интерес</div>
+                    <div>${interest || '-'}</div>
+                    <div class="title">Труд</div>
+                    <div>${work || '-'}</div>
+                    <div class="title">Память</div>
+                    <div>${memory || '-'}</div>
+                    <div class="title">Привычки</div>
+                    <div>${habits}</div>
+                    <div class="title">Быт</div>
+                    <div>${life}</div>
                 </div>
             `;
         }
