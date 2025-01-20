@@ -1,70 +1,63 @@
 function calculate() {
     const birthdate = document.getElementById('birthdate').value;
-    const result = document.getElementById('result');
-    result.innerHTML = ''; // Clear previous results
+    const output = document.getElementById('output');
 
+    // Validate date format
     if (!/^\d{2}\.\d{2}\.\d{4}$/.test(birthdate)) {
-        result.innerHTML = '<div>Введите дату в формате дд.мм.гггг</div>';
+        output.innerHTML = "<div class='cell'>Неверный формат даты. Используйте ДД.ММ.ГГГГ.</div>";
         return;
     }
 
     const [day, month, year] = birthdate.split('.').map(Number);
-    const digits = [...birthdate.replace(/\D/g, '')].map(Number);
+    const digits = [...birthdate.replace(/\./g, '')].map(Number);
 
-    // Дополнительные числа
-    const first = digits.reduce((sum, digit) => sum + digit, 0);
-    const second = [...String(first)].reduce((sum, digit) => sum + Number(digit), 0);
-    const third = first - 2 * (digits[0] || digits[1]);
-    const fourth = [...String(Math.abs(third))].reduce((sum, digit) => sum + Number(digit), 0);
-    const destiny = second >= 10 ? [...String(second)].reduce((sum, digit) => sum + Number(digit), 0) : second;
+    // Additional Numbers
+    const firstAdditional = digits.reduce((a, b) => a + b, 0);
+    const secondAdditional = [...firstAdditional.toString()].reduce((a, b) => +a + +b, 0);
+    const thirdAdditional = firstAdditional - 2 * (digits[0] || digits[1]);
+    const fourthAdditional = [...Math.abs(thirdAdditional).toString()].reduce((a, b) => +a + +b, 0);
 
-    // Функция подсчета чисел в массиве
-    const countDigits = (digit) => digits.concat(
-        [...String(first)], 
-        [...String(second)], 
-        [...String(third)], 
-        [...String(fourth)]
-    ).filter(d => +d === digit).length;
+    const destinyNumber = secondAdditional >= 10
+        ? [...secondAdditional.toString()].reduce((a, b) => +a + +b, 0)
+        : secondAdditional;
 
-    // Значения квадратов
-    const temperament = countDigits(3) + countDigits(5) + countDigits(7);
-    const target = countDigits(1) + countDigits(4) + countDigits(7);
-    const family = countDigits(2) + countDigits(5) + countDigits(8);
-    const habits = countDigits(3) + countDigits(6) + countDigits(9);
-    const life = countDigits(4) + countDigits(5) + countDigits(6);
+    // Helper to count digits
+    const countDigit = (num) => digits.filter((d) => d === num).length;
 
-    const character = countDigits(1);
-    const health = countDigits(4);
-    const luck = countDigits(7);
-    const energy = countDigits(2);
-    const logic = countDigits(5);
-    const duty = countDigits(8);
-    const interest = countDigits(3);
-    const work = countDigits(6);
-    const memory = countDigits(9);
+    // Matrix Calculations
+    const temperament = countDigit(3) + countDigit(5) + countDigit(7);
+    const target = countDigit(1) + countDigit(4) + countDigit(7);
+    const family = countDigit(2) + countDigit(5) + countDigit(8);
+    const habits = countDigit(3) + countDigit(6) + countDigit(9);
+    const life = countDigit(4) + countDigit(5) + countDigit(6);
 
-    // Формируем HTML-вывод
-    const firstSquare = `
-        <div><div class="header">Доп. числа</div>${first}, ${second}, ${third}, ${fourth}</div>
-        <div><div class="header">Число Судьбы</div>${destiny}</div>
-        <div><div class="header">Темперамент</div>${temperament}</div>
-        <div><div class="header">Цель</div>${target}</div>
-        <div><div class="header">Семья</div>${family}</div>
-        <div><div class="header">Привычки</div>${habits}</div>
-        <div><div class="header">Быт</div>${life}</div>
+    const character = countDigit(1);
+    const health = countDigit(4);
+    const luck = countDigit(7);
+    const energy = countDigit(2);
+    const logic = countDigit(5);
+    const duty = countDigit(8);
+    const interest = countDigit(3);
+    const work = countDigit(6);
+    const memory = countDigit(9);
+
+    // Display Results
+    output.innerHTML = `
+        <div class="cell">Доп. числа<br>${firstAdditional}, ${secondAdditional}, ${thirdAdditional}, ${fourthAdditional}</div>
+        <div class="cell">Число Судьбы<br>${destinyNumber}</div>
+        <div class="cell">Темперамент<br>${temperament}</div>
+        <div class="cell">Цель<br>${target}</div>
+        <div class="cell">Семья<br>${family}</div>
+        <div class="cell">Привычки<br>${habits}</div>
+        <div class="cell">Быт<br>${life}</div>
+        <div class="cell">Характер<br>${character}</div>
+        <div class="cell">Здоровье<br>${health}</div>
+        <div class="cell">Удача<br>${luck}</div>
+        <div class="cell">Энергия<br>${energy}</div>
+        <div class="cell">Логика<br>${logic}</div>
+        <div class="cell">Долг<br>${duty}</div>
+        <div class="cell">Интерес<br>${interest}</div>
+        <div class="cell">Труд<br>${work}</div>
+        <div class="cell">Память<br>${memory}</div>
     `;
-
-    const secondSquare = `
-        <div><div class="header">Характер</div>${character}</div>
-        <div><div class="header">Здоровье</div>${health || '-'}</div>
-        <div><div class="header">Удача</div>${luck || '-'}</div>
-        <div><div class="header">Энергия</div>${energy}</div>
-        <div><div class="header">Логика</div>${logic || '-'}</div>
-        <div><div class="header">Долг</div>${duty || '-'}</div>
-        <div><div class="header">Интерес</div>${interest}</div>
-        <div><div class="header">Труд</div>${work || '-'}</div>
-        <div><div class="header">Память</div>${memory}</div>
-    `;
-
-    result.innerHTML = firstSquare + secondSquare;
 }
