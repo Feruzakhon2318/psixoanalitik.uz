@@ -1,3 +1,5 @@
+document.getElementById("calculate-button").addEventListener("click", calculate);
+
 function calculate() {
     const birthdate = document.getElementById('birthdate').value;
     const outputGrid = document.getElementById('output-grid');
